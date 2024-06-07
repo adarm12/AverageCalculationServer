@@ -44,8 +44,18 @@ public class GeneralController {
         return persist.addGrade(courseName, courseGrade, coursePoints, userSecret);
     }
 
+    @RequestMapping(value = "/edit-grade", method = {RequestMethod.GET, RequestMethod.POST})
+    public BasicResponse editGrade(String oldCourseName, String courseName, Integer courseGrade, Integer coursePoints, String userSecret) {
+        return persist.editGrade(oldCourseName, courseName, courseGrade, coursePoints, userSecret);
+    }
+
+    @RequestMapping(value = "/delete-grade", method = {RequestMethod.GET, RequestMethod.POST})
+    public boolean deleteGrade(String courseName, String userSecret) {
+        return persist.deleteGrade(courseName, userSecret);
+    }
+
     @RequestMapping(value = "/grades", method = {RequestMethod.GET, RequestMethod.POST})
-    public List<Grade> getGradesBySecret(String userSecret) {
+    public BasicResponse getGradesBySecret(String userSecret) {
         return persist.getGradesBySecret(userSecret);
     }
 

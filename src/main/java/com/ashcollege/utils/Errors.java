@@ -14,6 +14,10 @@ public class Errors {
     public static final int NO_COURSE_NAME = 10;
     public static final int NO_VALID_GRADE = 11;
     public static final int NO_VALID_POINTS = 12;
+    public static final int NO_GRADES = 13;
+    public static final int MISSING_FIELDS = 14;
+    public static final int ERROR_NO_SUCH_GRADE = 15;
+    public static final int COURSE_NAME_IS_TAKEN = 16;
 
 
 }

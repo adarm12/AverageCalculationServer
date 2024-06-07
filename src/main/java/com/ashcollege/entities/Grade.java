@@ -3,11 +3,11 @@ package com.ashcollege.entities;
 public class Grade {
     private int id;
     private String courseName;
-    private int courseGrade;
-    private int coursePoints;
+    private Integer courseGrade;
+    private Integer coursePoints;
     private String userSecret;
 
-    public Grade(int id, String courseName, int grade, int coursePoints, String userSecret) {
+    public Grade(int id, String courseName, Integer grade, Integer coursePoints, String userSecret) {
         this.id = id;
         this.courseName = courseName;
         this.courseGrade = grade;
@@ -15,7 +15,7 @@ public class Grade {
         this.userSecret = userSecret;
     }
 
-    public Grade(String courseName, int grade, int coursePoints, String userSecret) {
+    public Grade(String courseName, Integer grade, Integer coursePoints, String userSecret) {
         this.courseName = courseName;
         this.courseGrade = grade;
         this.coursePoints = coursePoints;
@@ -42,7 +42,7 @@ public class Grade {
         this.courseName = courseName;
     }
 
-    public int getCourseGrade() {
+    public Integer getCourseGrade() {
         return courseGrade;
     }
 
@@ -50,7 +50,7 @@ public class Grade {
         this.courseGrade = grade;
     }
 
-    public int getCoursePoints() {
+    public Integer getCoursePoints() {
         return coursePoints;
     }
 

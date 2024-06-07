@@ -18,7 +18,7 @@
         <id name="id" type="int" column="id">
             <generator class="native"/>
         </id>
-        <property name="courseName" type="string" column="username"/>
+        <property name="courseName" type="string" column="courseName"/>
         <property name="courseGrade" type="int" column="grade"/>
         <property name="coursePoints" type="int" column="coursePoints"/>
         <property name="userSecret" type="string" column="userSecret"/>
