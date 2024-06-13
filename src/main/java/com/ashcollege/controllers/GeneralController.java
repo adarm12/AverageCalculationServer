@@ -1,19 +1,12 @@
 package com.ashcollege.controllers;
 
 import com.ashcollege.Persist;
-import com.ashcollege.entities.Grade;
-import com.ashcollege.entities.User;
 import com.ashcollege.responses.BasicResponse;
-import com.ashcollege.responses.LoginResponse;
 import com.ashcollege.utils.DbUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-
-import static com.ashcollege.utils.Errors.*;
 
 @RestController
 public class GeneralController {
@@ -40,7 +33,7 @@ public class GeneralController {
     }
 
     @RequestMapping(value = "/add-grade", method = {RequestMethod.GET, RequestMethod.POST})
-    public BasicResponse addGrade(String courseName, int courseGrade, int coursePoints, String userSecret) {
+    public BasicResponse addGrade(String courseName, Integer courseGrade, Integer coursePoints, String userSecret) {
         return persist.addGrade(courseName, courseGrade, coursePoints, userSecret);
     }
 
@@ -57,6 +50,11 @@ public class GeneralController {
     @RequestMapping(value = "/grades", method = {RequestMethod.GET, RequestMethod.POST})
     public BasicResponse getGradesBySecret(String userSecret) {
         return persist.getGradesBySecret(userSecret);
+    }
+
+    @RequestMapping(value = "/search", method = {RequestMethod.GET, RequestMethod.POST})
+    public BasicResponse searchCourseByName(String courseName, String userSecret) {
+        return persist.searchCourseByName(courseName, userSecret);
     }
 
 }

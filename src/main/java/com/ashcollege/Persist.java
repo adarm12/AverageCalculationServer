@@ -99,7 +99,7 @@ public class Persist {
     public BasicResponse addGrade(String courseName, Integer courseGrade, Integer coursePoints, String userSecret) {
         BasicResponse basicResponse = new BasicResponse(false, NO_ERRORS);
         if (courseName != null) {
-            if (checkIfCourseNameAvailable(courseName)) {
+            if (checkIfCourseNameAvailable(userSecret, courseName)) {
                 if (courseGrade != null) {
                     if (coursePoints != null) {
                         if (courseGrade >= 0 && courseGrade <= 100) {
@@ -125,7 +125,7 @@ public class Persist {
     public BasicResponse editGrade(String oldCourseName, String courseName, Integer courseGrade, Integer coursePoints, String userSecret) {
         BasicResponse basicResponse = new BasicResponse(false, NO_ERRORS);
         if (courseName != null) {
-            if (checkIfCourseNameAvailable(courseName)) {
+            if (checkIfCourseNameAvailable(userSecret, courseName)) {
                 if (courseGrade != null) {
                     if (coursePoints != null) {
                         if (courseGrade >= 0 && courseGrade <= 100) {
@@ -163,6 +163,46 @@ public class Persist {
         return delete;
     }
 
+    public BasicResponse getGradesBySecret(String userSecret) {
+        BasicResponse basicResponse = new BasicResponse(false, NO_ERRORS, null, 0);
+        if (!findGradesBySecret(userSecret).isEmpty()) {
+            User user = findUserBySecret(userSecret);
+            user.setAverage(calculateAverage(findGradesBySecret(userSecret)));
+            save(user);
+            basicResponse.setAverage(calculateAverage(findGradesBySecret(userSecret)));
+            basicResponse.setSuccess(true);
+            basicResponse.setGrades(findGradesBySecret(userSecret));
+        } else {
+            basicResponse.setErrorCode(NO_GRADES);
+        }
+        return basicResponse;
+    }
+
+    public BasicResponse searchCourseByName(String courseName, String userSecret) {
+        BasicResponse basicResponse = new BasicResponse(false, NO_ERRORS, null, 0);
+        if (courseName != null)
+            if (!searchCourseByCourseNameAndSecret(courseName, userSecret).isEmpty()) {
+                basicResponse.setSuccess(true);
+                basicResponse.setGrades(searchCourseByCourseNameAndSecret(courseName, userSecret));
+            } else {
+                basicResponse.setErrorCode(NO_GRADES);
+            }
+        else {
+            basicResponse.setErrorCode(NO_COURSE_NAME);
+        }
+        return basicResponse;
+    }
+
+    public List<Grade> searchCourseByCourseNameAndSecret(String courseName, String userSecret) {
+        List<Grade> grades;
+        grades = (List<Grade>) this.sessionFactory.getCurrentSession().createQuery(
+                        "FROM Grade WHERE courseName LIKE :courseName AND userSecret = :userSecret")
+                .setParameter("courseName", "%" + courseName + "%")
+                .setParameter("userSecret", userSecret)
+                .list();
+        return grades;
+    }
+
     public boolean checkIfUsernameAvailable(String username) {
         User user;
         user = (User) this.sessionFactory.getCurrentSession().createQuery(
@@ -173,10 +213,11 @@ public class Persist {
         return (user == null);
     }
 
-    public boolean checkIfCourseNameAvailable(String courseName) {
+    public boolean checkIfCourseNameAvailable(String userSecret, String courseName) {
         Grade grade;
         grade = (Grade) this.sessionFactory.getCurrentSession().createQuery(
-                        "FROM Grade WHERE courseName = :courseName")
+                        "FROM Grade WHERE userSecret = :userSecret AND courseName = :courseName")
+                .setParameter("userSecret", userSecret)
                 .setParameter("courseName", courseName)
                 .setMaxResults(1)
                 .uniqueResult();
@@ -222,21 +263,6 @@ public class Persist {
                 .setMaxResults(1)
                 .uniqueResult();
         return grade;
-    }
-
-    public BasicResponse getGradesBySecret(String userSecret) {
-        BasicResponse basicResponse = new BasicResponse(false, NO_ERRORS, null, 0.0);
-        if (findGradesBySecret(userSecret) != null) {
-            User user = findUserBySecret(userSecret);
-            user.setAverage(calculateAverage(findGradesBySecret(userSecret)));
-            save(user);
-            basicResponse.setAverage(calculateAverage(findGradesBySecret(userSecret)));
-            basicResponse.setSuccess(true);
-            basicResponse.setGrades(findGradesBySecret(userSecret));
-        } else {
-            basicResponse.setErrorCode(NO_GRADES);
-        }
-        return basicResponse;
     }
 
     public Double calculateAverage(List<Grade> grades) {
